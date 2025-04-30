@@ -100,11 +100,11 @@ class CrosswordCreator():
          constraints; in this case, the length of the word.)
         """
         for var in self.crossword.variables:
-            new_words = set()
+            new_words = set()  # maintain new words
             for word in self.domains[var]:
-                if len(word) == var.length:
-                    new_words.add(word)
-            self.domains[var] = new_words
+                if len(word) == var.length:  # check unary constraint
+                    new_words.add(word)  # add word if consistent
+            self.domains[var] = new_words  # assign node consistent words to domain
 
     def revise(self, x, y):
         """
@@ -115,7 +115,32 @@ class CrosswordCreator():
         Return True if a revision was made to the domain of `x`; return
         False if no revision was made.
         """
-        raise NotImplementedError
+        revised = False
+
+        if self.crossword.overlaps[x, y] is None:  # return if no overlap
+            return revised
+        else:
+            x_char_index = self.crossword.overlaps[x, y][0]  # x's character
+            y_char_index = self.crossword.overlaps[x, y][1]  # y's matching position
+
+            x_words = self.domains[x]
+            new_words = set()
+
+            # for each word in x's domain check if any word in y has same character at intersection
+            for word in x_words:
+                is_consistent = False
+                for word_y in self.domains[y]:
+                    if word[x_char_index] == word_y[y_char_index]:
+                        is_consistent = True  # consistent so break
+                        break
+
+                if is_consistent:
+                    new_words.add(word)  # add word
+                else:
+                    revised = True  # if some word missed means revised
+
+            self.domains[x] = new_words
+            return revised
 
     def ac3(self, arcs=None):
         """
