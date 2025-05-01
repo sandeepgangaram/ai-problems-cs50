@@ -241,8 +241,24 @@ class CrosswordCreator():
             if var not in assignment:
                 domain_val_count[var] = len(self.domains[var])
 
-        sorted_vars = sorted(domain_val_count, key=domain_val_count.get)
-        return sorted_vars[0]  # if equal values it doesn't matter i still want the 1st in list
+        sorted_vars = sorted(domain_val_count.items(), key=lambda item: item[1])
+
+        # check if least value is tied
+        tied_vars = []
+
+        for var in sorted_vars:
+            if var[1] == sorted_vars[0][1]:
+                tied_vars.append(var)
+            else:
+                break
+
+        if len(tied_vars) == 1:
+            return tied_vars[0][0]
+
+        # if tied go for least-degree heuristic
+        final_sort = sorted(tied_vars, key=lambda item: len(self.neighbors(item[0])))
+
+        return final_sort[0][0]
 
     def backtrack(self, assignment):
         """
