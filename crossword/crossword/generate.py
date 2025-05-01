@@ -256,7 +256,7 @@ class CrosswordCreator():
             return tied_vars[0][0]
 
         # if tied go for least-degree heuristic
-        final_sort = sorted(tied_vars, key=lambda item: len(self.neighbors(item[0])))
+        final_sort = sorted(tied_vars, key=lambda item: len(self.crossword.neighbors(item[0])))
 
         return final_sort[0][0]
 
@@ -269,7 +269,20 @@ class CrosswordCreator():
 
         If no assignment is possible, return None.
         """
-        raise NotImplementedError
+        if self.assignment_complete(assignment):
+            return assignment
+        var = self.select_unassigned_variable(assignment)
+
+        for val in self.order_domain_values(var, assignment):
+            assignment[var] = val  # add {var:val} to assignment
+            if self.consistent(assignment):  # check if consistent
+                # recursively backtrack with this new assignment
+                result = self.backtrack(assignment)
+                if result is not None:  # if no issue, means found a solution so return the assignment
+                    return result
+            else:
+                del assignment[var]  # not consistent so remove {var:val}
+        return None
 
 
 def main():
