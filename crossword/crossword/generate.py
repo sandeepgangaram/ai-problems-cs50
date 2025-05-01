@@ -276,6 +276,15 @@ class CrosswordCreator():
         for val in self.order_domain_values(var, assignment):
             assignment[var] = val  # add {var:val} to assignment
             if self.consistent(assignment):  # check if consistent
+
+                # arcs for the selected var
+                arcs = [(neighbor, var) for neighbor in self.crossword.neighbors(var)]
+
+                # interleave search if cannot enforece arc consistency with the new assignment
+                if self.ac3(arcs) is None:
+                    del assignment[var]
+                    return None
+
                 # recursively backtrack with this new assignment
                 result = self.backtrack(assignment)
                 if result is not None:  # if no issue, means found a solution so return the assignment
