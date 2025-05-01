@@ -235,7 +235,14 @@ class CrosswordCreator():
         degree. If there is a tie, any of the tied variables are acceptable
         return values.
         """
-        raise NotImplementedError
+        domain_val_count = dict()
+
+        for var in self.crossword.variables:
+            if var not in assignment:
+                domain_val_count[var] = len(self.domains[var])
+
+        sorted_vars = sorted(domain_val_count, key=domain_val_count.get)
+        return sorted_vars[0]  # if equal values it doesn't matter i still want the 1st in list
 
     def backtrack(self, assignment):
         """
