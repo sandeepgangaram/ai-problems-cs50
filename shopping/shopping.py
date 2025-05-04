@@ -7,18 +7,18 @@ from sklearn.neighbors import KNeighborsClassifier
 TEST_SIZE = 0.4
 
 MONTHS = {
-    "Jan":0,
-    "Feb":1,
-    "Mar":2,
-    "Apr":3,
-    "May":4,
-    "Jun":5,
-    "Jul":6,
-    "Aug":7,
-    "Sep":8,
-    "Oct":9,
-    "Nov":10,
-    "Dec":11
+    "Jan": 0,
+    "Feb": 1,
+    "Mar": 2,
+    "Apr": 3,
+    "May": 4,
+    "June": 5,
+    "Jul": 6,
+    "Aug": 7,
+    "Sep": 8,
+    "Oct": 9,
+    "Nov": 10,
+    "Dec": 11
 }
 
 
@@ -99,9 +99,9 @@ def load_data(filename):
                 int(row[11]),
                 int(row[12]),
                 int(row[13]),
-                1 if row[14] == "Returning_Visitor" else 0,
-                1 if row[15] == "TRUE" else 0,
-                1 if row[16] == "TRUE" else 0
+                int(row[14]),
+                1 if row[15] == "Returning_Visitor" else 0,
+                1 if row[16] == "TRUE" else 0,
             ])
 
             labels.append(1 if row[17] == "TRUE" else 0)
