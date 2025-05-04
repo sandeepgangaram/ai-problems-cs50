@@ -80,10 +80,12 @@ def load_data(filename):
         reader = csv.reader(f)
         next(reader)
 
+        # initialize empty evidence and lavels
         evidence = []
         labels = []
 
         for row in reader:
+            # add inputs to evidence
             evidence.append([
                 int(row[0]),
                 float(row[1]),
@@ -104,6 +106,7 @@ def load_data(filename):
                 1 if row[16] == "TRUE" else 0,
             ])
 
+            # add "revenue" to label
             labels.append(1 if row[17] == "TRUE" else 0)
 
         return (evidence, labels)
@@ -136,7 +139,24 @@ def evaluate(labels, predictions):
     representing the "true negative rate": the proportion of
     actual negative labels that were accurately identified.
     """
-    raise NotImplementedError
+    # initialize true positives and actual positives
+    true_positives = 0
+    true_negatives = 0
+    actual_positives = 0
+    actual_negatives = 0
+
+    for actual, predicted in zip(labels, predictions):
+        if actual == 1:
+            actual_positives += 1
+            if actual == predicted:  # correct true prediction
+                true_positives += 1
+        else:
+            actual_negatives += 1
+            if actual == predicted:  # correct false prediction
+                true_negatives += 1
+
+    # calculate and return sensitivity and specificty
+    return (float(true_positives/actual_positives), float(true_negatives/actual_negatives))
 
 
 if __name__ == "__main__":
