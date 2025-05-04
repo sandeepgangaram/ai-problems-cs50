@@ -101,11 +101,12 @@ class NimAI():
         Return the Q-value for the state `state` and the action `action`.
         If no Q-value exists yet in `self.q`, return 0.
         """
-        state = tuple(state)
+        # convert state list to a tuple
+        state_tup = tuple(state)
 
         # return q value if in q dict else return 0
-        if (state, action) in self.q:
-            return self.q[(state, action)]
+        if (state_tup, action) in self.q:
+            return self.q[(state_tup, action)]
         else:
             return 0
 
@@ -124,7 +125,7 @@ class NimAI():
         `alpha` is the learning rate, and `new value estimate`
         is the sum of the current reward and estimated future rewards.
         """
-         # caluculate new q-value estimate
+        # caluculate new q-value estimate
         new_q = reward + future_rewards
 
         # calculate adjust q-value
@@ -143,16 +144,18 @@ class NimAI():
         Q-value in `self.q`. If there are no available actions in
         `state`, return 0.
         """
-                # get all possible actions
+        # get all possible actions
         actions = Nim.available_actions(state)
 
         if len(actions) == 0:  # return 0 if no actions
             return 0
-        max_q = 0
+        max_q = -math.inf
         # find max q off state,actions pairs for which q-value is avaialbe
         for action in actions:
             if (tuple(state), action) in self.q:
                 max_q = max(self.q[(tuple(state), action)], max_q)
+            else:
+                max_q = max(0,max_q)
 
         return max_q
 
@@ -171,7 +174,26 @@ class NimAI():
         If multiple actions have the same Q-value, any of those
         options is an acceptable return value.
         """
-        raise NotImplementedError
+        available_actions = list(Nim.available_actions(state))
+        max_q = -math.inf
+        possible_actions = []
+
+        # filter all actions with the highest q-value
+        for action in available_actions:
+            q_val = self.get_q_value(state,action)
+            if q_val > max_q:
+                possible_actions = [action]
+                max_q = q_val
+            elif q_val == max_q:
+                possible_actions.append(action)
+
+        if epsilon is False:
+            return possible_actions[0]  # greedy decision
+        else:
+            if random.random() < self.epsilon:  # epsilon greedy
+                return possible_actions[0]
+            else:
+                return available_actions[random.randint(0, len(available_actions) - 1)]
 
 
 def train(n):
