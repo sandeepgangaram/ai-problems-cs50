@@ -18,6 +18,7 @@ x_test = x_test.reshape(
 
 # Create a convolutional neural network
 model = tf.keras.models.Sequential([
+    # shape of the input data
     tf.keras.layers.Input(shape=(28,28,1)),
 
     # Convolutional layer. Learn 32 filters using a 3x3 kernel
@@ -46,7 +47,7 @@ model.compile(
     metrics=["accuracy"]
 )
 
-model.fit(x_train, y_train, epochs=10)
+model.fit(x_train, y_train, epochs=20)
 
 # Evaluate neural network performance
 model.evaluate(x_test,  y_test, verbose=2)
