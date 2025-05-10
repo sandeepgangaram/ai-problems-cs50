@@ -4,6 +4,8 @@ This document summarizes the iterative experimentation process for building and 
 
 Our goal was to find the optimal architecture based on performance metrics while gradually increasing complexity.
 
+> **Data Source**: [data set](https://cdn.cs50.net/ai/2023/x/projects/5/gtsrb.zip)
+
 > **Activation Functions**:
 >
 > - **ReLU** activation used for all convolutional and hidden dense layers
