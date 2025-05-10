@@ -1,8 +1,13 @@
-# Neural Network Classification Experiments on Traffic Signs Classification Problem
+# Neural Network Classification Experiments
 
 This document summarizes the iterative experimentation process for building and tuning a convolutional neural network (CNN) for a classification task. The primary evaluation metrics used were **accuracy** and **loss** on the validation/test set.
 
 Our goal was to find the optimal architecture based on performance metrics while gradually increasing complexity.
+
+> **Activation Functions**:
+>
+> - **ReLU** activation used for all convolutional and hidden dense layers
+> - **Softmax** activation used for the output layer
 
 ## Experiment Summary
 
@@ -22,5 +27,8 @@ The best performing model was **Experiment #3** with:
 - Two convolutional layers (48 filters each)
 - 2x2 MaxPooling
 - A dense hidden layer of 256 units
-- Dropout of 0.5  
-  This architecture achieved the highest accuracy of **96.19%** and the lowest loss of **0.1658**.
+- Dropout of 0.5
+- **ReLU** activations for convolution and hidden layers
+- **Softmax** activation for output layer
+
+This architecture achieved the highest accuracy of **96.19%** and the lowest loss of **0.1658**.
