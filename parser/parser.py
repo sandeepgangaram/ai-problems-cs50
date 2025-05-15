@@ -54,7 +54,6 @@ def main():
         for np in np_chunk(tree):
             print(" ".join(np.flatten()))
 
-
 def preprocess(sentence):
     """
     Convert `sentence` to a list of its words.
@@ -62,8 +61,9 @@ def preprocess(sentence):
     and removing any word that does not contain at least one alphabetic
     character.
     """
-    raise NotImplementedError
-
+    token_list = nltk.tokenize.word_tokenize(sentence)
+    filtered = [s.lower() for s in token_list if any(c.isalpha() for c in s)]
+    return filtered
 
 def np_chunk(tree):
     """
