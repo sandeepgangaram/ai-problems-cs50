@@ -15,7 +15,11 @@ V -> "smiled" | "tell" | "were"
 """
 
 NONTERMINALS = """
-S -> N V
+S -> NP VP | NP VP NP VP NP
+AP -> Adj | Adj NP
+NP -> N | Det NP | AP | N PP | Conj N | N NP | Det AP
+PP -> P | P NP
+VP -> V | V NP | V NP PP | V Adv | Conj V | Det V
 """
 
 grammar = nltk.CFG.fromstring(NONTERMINALS + TERMINALS)
@@ -54,6 +58,7 @@ def main():
         for np in np_chunk(tree):
             print(" ".join(np.flatten()))
 
+
 def preprocess(sentence):
     """
     Convert `sentence` to a list of its words.
@@ -64,6 +69,7 @@ def preprocess(sentence):
     token_list = nltk.tokenize.word_tokenize(sentence)
     filtered = [s.lower() for s in token_list if any(c.isalpha() for c in s)]
     return filtered
+
 
 def np_chunk(tree):
     """
