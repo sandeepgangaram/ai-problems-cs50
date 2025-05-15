@@ -66,7 +66,9 @@ def preprocess(sentence):
     and removing any word that does not contain at least one alphabetic
     character.
     """
+    # tokenize all words in the sentence
     token_list = nltk.tokenize.word_tokenize(sentence)
+    # filter out words with atleast one alpha and lower case
     filtered = [s.lower() for s in token_list if any(c.isalpha() for c in s)]
     return filtered
 
@@ -78,12 +80,16 @@ def np_chunk(tree):
     whose label is "NP" that does not itself contain any other
     noun phrases as subtrees.
     """
+    # initialize result of nps
     nps = []
+    # check all child trees which are NP
     for child in tree.subtrees(lambda t: t.label() == "NP"):
         is_np = True
+        # check if any sub child is also NP
         for sub in child.subtrees():
             if sub != child and sub.label() == "NP":
                 is_np = False
+        # if no child which is NP add to result
         if is_np:
             nps.append(child)
     return nps
