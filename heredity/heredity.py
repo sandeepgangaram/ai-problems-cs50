@@ -128,6 +128,15 @@ def powerset(s):
     ]
 
 
+def get_pass_prob(gene_count):
+    if gene_count == 2:
+        return 1 - PROBS["mutation"]
+    elif gene_count == 1:
+        return 0.5
+    else:
+        return PROBS["mutation"]
+
+
 def joint_probability(people, one_gene, two_genes, have_trait):
     """
     Compute and return a joint probability.
@@ -139,7 +148,50 @@ def joint_probability(people, one_gene, two_genes, have_trait):
         * everyone in set `have_trait` has the trait, and
         * everyone not in set` have_trait` does not have the trait.
     """
-    raise NotImplementedError
+    prob = 1
+
+    for person in people:
+        gene_count = (
+            2 if person in two_genes else
+            1 if person in one_gene else
+            0
+        )
+
+        mother = people[person]["mother"]
+        father = people[person]["father"]
+
+        if mother is None and father is None:
+            # No parental info, use unconditional gene probability
+            prob *= PROBS["gene"][gene_count]
+        else:
+            # Parents exist, compute from inheritance
+            mother_gene = (
+                2 if mother in two_genes else
+                1 if mother in one_gene else
+                0
+            )
+            father_gene = (
+                2 if father in two_genes else
+                1 if father in one_gene else
+                0
+            )
+
+            pass_mother = get_pass_prob(mother_gene)
+            pass_father = get_pass_prob(father_gene)
+
+            if gene_count == 2:
+                gene_prob = pass_mother * pass_father
+            elif gene_count == 1:
+                gene_prob = pass_mother * (1 - pass_father) + (1 - pass_mother) * pass_father
+            else:  # 0
+                gene_prob = (1 - pass_mother) * (1 - pass_father)
+
+            prob *= gene_prob
+
+        # Multiply by trait probability
+        prob *= PROBS["trait"][gene_count][person in have_trait]
+
+    return prob
 
 
 def update(probabilities, one_gene, two_genes, have_trait, p):
